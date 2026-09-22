@@ -1,98 +1,54 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, Vibration } from 'react-native';
+// 作成したスタイルファイルをインポート
+import { styles } from '../styles/scoreStyle';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+export default function App() {
+  const [scoreA, setScoreA] = useState<number>(0);
+  const [scoreB, setScoreB] = useState<number>(0);
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+  const addScoreA = () => {
+    setScoreA((prev) => prev + 1);
+    Vibration.vibrate(40);
+  };
+
+  const addScoreB = () => {
+    setScoreB((prev) => prev + 1);
+    Vibration.vibrate(40);
+  };
+
+  const resetScore = () => {
+    setScoreA(0);
+    setScoreB(0);
+    Vibration.vibrate([0, 80, 40, 80]);
+  };
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <View style={styles.container}>
+      {/* ヘッダーエリア */}
+      <View style={styles.header}>
+        <Text style={styles.title}>卓球スコアボード</Text>
+        <TouchableOpacity style={styles.resetButton} onPress={resetScore}>
+          <Text style={styles.resetText}>リセット</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* スコア表示エリア（横並び） */}
+      <View style={styles.scoreContainer}>
+        {/* PLAYER A */}
+        <TouchableOpacity style={[styles.playerCard, styles.cardA]} onPress={addScoreA}>
+          <Text style={styles.playerLabel}>PLAYER A</Text>
+          <Text style={styles.scoreText}>{scoreA}</Text>
+          <Text style={styles.tapNotice}>タップで+1点</Text>
+        </TouchableOpacity>
+
+        {/* PLAYER B */}
+        <TouchableOpacity style={[styles.playerCard, styles.cardB]} onPress={addScoreB}>
+          <Text style={styles.playerLabel}>PLAYER B</Text>
+          <Text style={styles.scoreText}>{scoreB}</Text>
+          <Text style={styles.tapNotice}>タップで+1点</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});

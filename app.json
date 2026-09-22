@@ -3,7 +3,7 @@
     "name": "table-tennis-score",
     "slug": "table-tennis-score",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "tabletennisscore",
     "userInterfaceStyle": "automatic",
