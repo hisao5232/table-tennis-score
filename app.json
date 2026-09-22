@@ -21,7 +21,15 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "pwa": {
+        "name": "卓球スコアボード",
+        "shortName": "卓球スコア",
+        "themeColor": "#208AEF",
+        "backgroundColor": "#208AEF",
+        "display": "standalone",
+        "orientation": "landscape"
+      }
     },
     "plugins": [
       "expo-router",
